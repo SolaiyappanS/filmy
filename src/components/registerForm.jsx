@@ -15,7 +15,7 @@ class RegisterForm extends Form {
   };
 
   doSubmit = () => {
-    //Submit
+    //Call the server
     console.log("Submitted");
   };
 
@@ -23,7 +23,7 @@ class RegisterForm extends Form {
     return (
       <div>
         <h1>Register</h1>
-        <form onSubmit={this.handleSubmit()}>
+        <form onSubmit={this.handleSubmit}>
           {this.renderInput("username", "Username")}
           {this.renderInput("password", "Password", "password")}
           {this.renderInput("name", "Name")}
