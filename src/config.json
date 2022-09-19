@@ -1,0 +1,12 @@
+{
+  "fbConfig": {
+    "apiKey": "AIzaSyDlhgIpfhadEtRGtyUZPkxjyKudv6Y1qJ4",
+    "authDomain": "vidly-7f6bd.firebaseapp.com",
+    "projectId": "vidly-7f6bd",
+    "storageBucket": "vidly-7f6bd.appspot.com",
+    "messagingSenderId": "1097204626193",
+    "appId": "1:1097204626193:web:a8f65b58ea20bbd69812b0",
+    "measurementId": "G-NMRFMKXN86",
+    "databaseURL": "https://vidly-7f6bd-default-rtdb.firebaseio.com/"
+  }
+}
