@@ -1,6 +1,8 @@
 import React from "react";
 import Joi from "joi-browser";
 import Form from "./common/form";
+import { login } from "../services/userService";
+import { withNavigate } from "../services/routerService";
 
 class LoginForm extends Form {
   state = {
@@ -9,13 +11,14 @@ class LoginForm extends Form {
   };
 
   schema = {
-    username: Joi.string().required().label("Username"),
+    username: Joi.string().email().required().label("Username"),
     password: Joi.string().required().label("Password"),
   };
 
-  doSubmit = () => {
-    //Call the server
-    console.log("Submitted");
+  doSubmit = async () => {
+    if (await login(this.state.data)) {
+      this.props.navigate("/movies");
+    }
   };
 
   render() {
@@ -32,4 +35,4 @@ class LoginForm extends Form {
   }
 }
 
-export default LoginForm;
+export default withNavigate(LoginForm);

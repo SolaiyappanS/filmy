@@ -19,8 +19,8 @@ class TableHeader extends Component {
     const { sortColumn } = this.props;
     if (column.path === sortColumn.path) {
       if (sortColumn.order === "asc")
-        return <GetFontAwesomeIcon type="solid" icon="sort-asc" />;
-      return <GetFontAwesomeIcon type="solid" icon="sort-desc" />;
+        return <GetFontAwesomeIcon type="solid" icon="arrow-down" />;
+      return <GetFontAwesomeIcon type="solid" icon="arrow-up" />;
     }
   };
 

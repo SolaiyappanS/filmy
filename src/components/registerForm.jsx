@@ -1,6 +1,8 @@
 import React from "react";
 import Joi from "joi-browser";
 import Form from "./common/form";
+import { register } from "../services/userService";
+import { withNavigate } from "../services/routerService";
 
 class RegisterForm extends Form {
   state = {
@@ -14,9 +16,10 @@ class RegisterForm extends Form {
     name: Joi.string().required().label("Name"),
   };
 
-  doSubmit = () => {
-    //Call the server
-    console.log("Submitted");
+  doSubmit = async () => {
+    if (await register(this.state.data)) {
+      this.props.navigate("/movies");
+    }
   };
 
   render() {
@@ -34,4 +37,4 @@ class RegisterForm extends Form {
   }
 }
 
-export default RegisterForm;
+export default withNavigate(RegisterForm);
