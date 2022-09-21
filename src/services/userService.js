@@ -5,7 +5,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { getDatabase, ref, set } from "firebase/database";
+import { get, getDatabase, ref, set } from "firebase/database";
 import { toast } from "react-toastify";
 import config from "../config.json";
 
@@ -49,7 +49,15 @@ export async function login(user) {
 }
 
 export async function logout() {
-  await signOut(auth).then((cred) => {
+  await signOut(auth).then(() => {
     toast.success("Logged out successfully");
   });
+}
+
+export async function getUser(uid) {
+  var user = {};
+  await get(ref(db, "users/" + uid)).then((res) => {
+    user = res.val();
+  });
+  return user;
 }
