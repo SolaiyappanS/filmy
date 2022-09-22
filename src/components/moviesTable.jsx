@@ -21,25 +21,30 @@ class MoviesTable extends Component {
         <Like liked={movie.liked} onClick={() => this.props.onLike(movie)} />
       ),
     },
-    {
-      key: "Delete",
-      content: (movie) => (
-        <button
-          onClick={() => this.props.onDelete(movie)}
-          className="btn btn-danger btn-sm"
-        >
-          Delete
-        </button>
-      ),
-    },
   ];
+
+  deleteColumn = {
+    key: "Delete",
+    content: (movie) => (
+      <button
+        onClick={() => this.props.onDelete(movie)}
+        className="btn btn-danger btn-sm"
+      >
+        Delete
+      </button>
+    ),
+  };
 
   render() {
     const { movies, sortColumn, onSort } = this.props;
     return (
       <Table
         items={movies}
-        columns={this.columns}
+        columns={
+          this.props.user.admin
+            ? [...this.columns, this.deleteColumn]
+            : this.columns
+        }
         sortColumn={sortColumn}
         onSort={onSort}
       />

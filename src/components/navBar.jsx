@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import { logout } from "../services/userService";
+import GetFontAwesomeIcon from "./common/getFontAwesomeIcon";
 
 const NavBar = ({ user }) => {
   return (
@@ -33,11 +34,8 @@ const NavBar = ({ user }) => {
             </NavLink>
             {user.name ? (
               <React.Fragment>
-                <NavLink className="nav-item nav-link" to="/profile">
-                  {user.name}
-                </NavLink>
                 <button
-                  className="btn btn-dark"
+                  className="btn btn-success"
                   onClick={async () => {
                     await logout();
                     window.location = "/";
@@ -45,6 +43,16 @@ const NavBar = ({ user }) => {
                 >
                   Logout
                 </button>
+                <NavLink className="nav-item nav-link" to="/profile">
+                  {user.name}
+                </NavLink>
+                {user.admin ? (
+                  <GetFontAwesomeIcon
+                    type="solid"
+                    icon="asterisk"
+                    style={{ color: "orange", fontSize: 20 }}
+                  />
+                ) : null}
               </React.Fragment>
             ) : (
               <React.Fragment>

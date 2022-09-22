@@ -17,9 +17,11 @@ class RegisterForm extends Form {
   };
 
   doSubmit = async () => {
-    if (await register(this.state.data)) {
-      this.props.navigate("/movies");
-    }
+    await register(this.state.data).then((snap) => {
+      if (snap) {
+        this.props.navigate("/movies");
+      }
+    });
   };
 
   render() {

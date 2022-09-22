@@ -20,6 +20,7 @@ export async function register(user) {
   await createUserWithEmailAndPassword(auth, user.username, user.password)
     .then(async (cred) => {
       await set(ref(db, "users/" + cred.user.uid), {
+        admin: user.username.endsWith("@admin.example.com"),
         username: user.username,
         name: user.name,
       });

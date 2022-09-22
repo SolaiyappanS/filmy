@@ -17,10 +17,13 @@ import { getUser } from "./services/userService";
 
 class App extends Component {
   state = {
+    uid: "",
     user: {
+      admin: false,
       name: "",
       username: "",
     },
+    loggedIn: false,
   };
 
   async updateUserCredentials() {
@@ -28,7 +31,10 @@ class App extends Component {
     const auth = getAuth(app);
     auth.onAuthStateChanged(async (cred) => {
       if (cred) {
+        this.setState({ uid: cred.uid, loggedIn: true });
         await getUser(cred.uid).then((user) => this.setState({ user }));
+      } else {
+        this.setState({ loggedIn: false });
       }
     });
   }
@@ -38,21 +44,37 @@ class App extends Component {
   }
 
   render() {
+    const { admin } = this.state.user;
+    const { loggedIn, uid, user } = this.state;
     return (
       <React.Fragment>
-        <NavBar user={this.state.user} />
+        <NavBar user={user} />
         <main className="container">
           <ToastContainer />
           <Routes>
             <Route path="/register" element={<RegisterForm />} />
-            <Route path="/login" element={<LoginForm />} />
-            <Route path="/movies/:id" element={<MovieForm />} />
-            <Route path="/movies" element={<Movies />} />
+            <Route
+              path="/login"
+              element={loggedIn ? <Navigate to="/movies" /> : <LoginForm />}
+            />
+            <Route
+              path="/movies/:id"
+              element={
+                admin ? (
+                  <MovieForm uid={uid} />
+                ) : loggedIn ? (
+                  <Navigate to="/movies" />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+            <Route path="/movies" element={<Movies uid={uid} user={user} />} />
             <Route path="/customers" element={<Customers />} />
             <Route path="/rentals" element={<Rentals />} />
             <Route path="/not-found" element={<NotFound />} />
-            <Route index element={<Navigate to="movies" />} />
-            <Route path="*" element={<Navigate to="not-found" />} />
+            <Route index element={<Navigate to="/movies" />} />
+            <Route path="*" element={<Navigate to="/not-found" />} />
           </Routes>
         </main>
       </React.Fragment>

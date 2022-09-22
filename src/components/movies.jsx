@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { getMovies, deleteMovie } from "../services/movieService";
+import { getMovies, deleteMovie, isAdmin } from "../services/movieService";
 import { getGenres } from "../services/genreService";
 import MoviesTable from "./moviesTable";
 import ListGroup from "./common/listGroup";
@@ -18,19 +18,34 @@ class Movies extends Component {
     searchQuery: "",
     selectedGenre: { _id: "", name: "All Movies" },
     sortColumn: { path: "title", order: "asc" },
+    admin: false,
   };
 
-  async componentDidMount() {
+  async updateMovieDatabase() {
+    const movies = await getMovies();
+    this.setState({ movies });
+  }
+
+  async updateGenreDatabase() {
     const genreList = await getGenres();
     const genres = [{ _id: "", name: "All Movies" }, ...genreList];
-    const movies = await getMovies();
-    this.setState({ movies, genres });
+    this.setState({ genres });
+  }
+
+  async updateAdmin() {
+    await isAdmin(this.props.uid).then((snap) => {
+      this.setState({ admin: snap });
+    });
+  }
+
+  async componentDidMount() {
+    this.updateAdmin();
+    this.updateGenreDatabase();
+    this.updateMovieDatabase();
   }
 
   handleDelete = async (movie) => {
-    await deleteMovie(movie._id);
-    const movies = this.state.movies.filter((m) => m._id !== movie._id);
-    this.setState({ movies });
+    await deleteMovie(movie._id, this.props.uid);
   };
 
   handleLike = (movie) => {
@@ -115,12 +130,15 @@ class Movies extends Component {
           />
         </div>
         <div className="col">
-          <Link to="/movies/new" className="btn btn-primary mb-2">
-            New Movie
-          </Link>
+          {this.state.admin ? (
+            <Link to="/movies/new" className="btn btn-primary mb-2">
+              New Movie
+            </Link>
+          ) : null}
           <p>Showing {moviesCount} movies in the database</p>
           <SearchBox value={searchQuery} onChange={this.handleSearch} />
           <MoviesTable
+            user={this.props.user}
             movies={movies}
             sortColumn={sortColumn}
             onLike={this.handleLike}

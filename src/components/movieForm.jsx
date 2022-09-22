@@ -52,7 +52,7 @@ class MovieForm extends Form {
   };
 
   doSubmit = async () => {
-    await saveMovie(this.state.data);
+    await saveMovie(this.state.data, this.props.uid);
 
     this.props.navigate("/movies", { replace: false });
   };
