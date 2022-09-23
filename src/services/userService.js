@@ -24,7 +24,7 @@ export async function register(user) {
         username: user.username,
         name: user.name,
       });
-      toast.success("User Added");
+      toast.success("Account created");
       login({ username: user.username, password: user.password });
       result = true;
     })
@@ -50,9 +50,7 @@ export async function login(user) {
 }
 
 export async function logout() {
-  await signOut(auth).then(() => {
-    toast.success("Logged out successfully");
-  });
+  await signOut(auth);
 }
 
 export async function getUser(uid) {
@@ -64,16 +62,14 @@ export async function getUser(uid) {
 }
 
 export async function saveUser(name, uid) {
+  var result = false;
   await set(ref(db, "users/" + uid + "/name"), name)
-    .then(() =>
-      toast.success(
-        'Profile name changed to "' +
-          name +
-          '" successfully. Refresh the page to see the changes.'
-      )
-    )
+    .then(() => {
+      result = true;
+    })
     .catch((err) => {
       toast.error(`Error: ${organizeError(err.code)}`);
+      result = false;
     });
-  return name + uid;
+  return result;
 }

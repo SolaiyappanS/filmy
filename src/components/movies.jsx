@@ -1,24 +1,24 @@
 import React, { Component } from "react";
-import { getMovies, deleteMovie, isAdmin } from "../services/movieService";
-import { getGenres } from "../services/genreService";
-import MoviesTable from "./moviesTable";
-import ListGroup from "./common/listGroup";
-import Pagination from "./common/pagination";
-import { paginate } from "../utils/paginate";
 import ld from "lodash";
 import { Link } from "react-router-dom";
+import MoviesTable from "./moviesTable";
+import ListGroup from "./common/listGroup";
 import SearchBox from "./common/searchBox";
+import Pagination from "./common/pagination";
+import { getMovies, deleteMovie } from "../services/movieService";
+import { getGenres } from "../services/genreService";
+import { paginate } from "../utils/paginate";
+import { withNavigate } from "../services/routerService";
 
 class Movies extends Component {
   state = {
     movies: [],
     genres: [],
-    pageSize: 4,
+    pageSize: 5,
     currentPage: 1,
     searchQuery: "",
     selectedGenre: { _id: "", name: "All Movies" },
     sortColumn: { path: "title", order: "asc" },
-    admin: false,
   };
 
   async updateMovieDatabase() {
@@ -32,20 +32,15 @@ class Movies extends Component {
     this.setState({ genres });
   }
 
-  async updateAdmin() {
-    await isAdmin(this.props.uid).then((snap) => {
-      this.setState({ admin: snap });
-    });
-  }
-
   async componentDidMount() {
-    this.updateAdmin();
     this.updateGenreDatabase();
     this.updateMovieDatabase();
   }
 
   handleDelete = async (movie) => {
-    await deleteMovie(movie._id, this.props.uid);
+    await deleteMovie(movie._id, this.props.uid).then((snap) => {
+      if (snap) this.props.navigate("/");
+    });
   };
 
   handleLike = (movie) => {
@@ -121,7 +116,7 @@ class Movies extends Component {
           />
         </div>
         <div className="col">
-          {this.state.admin ? (
+          {this.props.user.admin ? (
             <Link to="/movies/new" className="btn btn-primary mb-2">
               New Movie
             </Link>
@@ -147,4 +142,4 @@ class Movies extends Component {
   }
 }
 
-export default Movies;
+export default withNavigate(Movies);

@@ -53,11 +53,17 @@ export async function saveMovie(movie, uid) {
 }
 
 export async function deleteMovie(id, uid) {
+  var result = false;
   await isAdmin(uid).then(async (snap) => {
     if (snap === true) {
       await remove(ref(db, "movies/" + id));
-    } else toast.warn("Permission denied");
+      result = true;
+    } else {
+      toast.warn("Permission denied");
+      result = false;
+    }
   });
+  return result;
 }
 
 export async function isAdmin(uid) {

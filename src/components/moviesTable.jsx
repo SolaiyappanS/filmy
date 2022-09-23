@@ -7,7 +7,7 @@ class MoviesTable extends Component {
   columns = [
     { path: "genre.name", label: "Genre" },
     { path: "numberInStock", label: "Stock" },
-    { path: "dailyRentalRate", label: "Rate" },
+    { path: "dailyRentalRate", label: "Rating" },
     {
       key: "Like",
       content: (movie) => (
@@ -33,7 +33,11 @@ class MoviesTable extends Component {
   movieLinkColumn = {
     path: "title",
     label: "Title",
-    content: (movie) => <Link to={`/movies/${movie._id}`}>{movie.title}</Link>,
+    content: (movie) => (
+      <Link style={{ textDecoration: "none" }} to={`/movies/${movie._id}`}>
+        {movie.title}
+      </Link>
+    ),
   };
 
   render() {

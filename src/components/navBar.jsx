@@ -1,14 +1,14 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import { logout } from "../services/userService";
-import GetFontAwesomeIcon from "./common/getFontAwesomeIcon";
+import Logo from "../logo.png";
 
 const NavBar = ({ user }) => {
   return (
     <nav className="navbar navbar-expand-sm navbar-light bg-light">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
-          Filmy
+          <img src={Logo} alt="Bootstrap" width="50" title="Filmy" /> Filmy
         </Link>
         <button
           className="navbar-toggler"
@@ -39,14 +39,12 @@ const NavBar = ({ user }) => {
                 </button>
                 <NavLink className="nav-item nav-link" to="/profile">
                   {user.name}
+                  {user.admin ? (
+                    <span style={{ color: "orange" }} title="Admin User">
+                      *
+                    </span>
+                  ) : null}
                 </NavLink>
-                {user.admin ? (
-                  <GetFontAwesomeIcon
-                    type="solid"
-                    icon="asterisk"
-                    style={{ color: "orange", fontSize: 20 }}
-                  />
-                ) : null}
               </React.Fragment>
             ) : (
               <React.Fragment>

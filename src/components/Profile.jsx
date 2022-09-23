@@ -6,12 +6,12 @@ import { getUser, saveUser } from "../services/userService";
 class Profile extends Form {
   state = {
     data: { name: "" },
-    user: { username: "", admin: false },
+    user: { username: "", name: "" },
     errors: {},
   };
 
   schema = {
-    name: Joi.string().required().label("Name"),
+    name: Joi.string().min(3).required().label("Name"),
   };
 
   async componentDidMount() {
@@ -21,18 +21,17 @@ class Profile extends Form {
   }
 
   doSubmit = async () => {
-    await saveUser(this.state.data.name, this.props.uid);
+    await saveUser(this.state.data.name, this.props.uid).then((snap) => {
+      if (snap && this.state.data.name !== this.state.user.name) {
+        window.location = "/";
+      }
+    });
   };
 
   render() {
     return (
       <div>
         <h1>Edit Profile</h1>
-        {this.state.user.admin ? (
-          <h6 style={{ color: "orange" }}>Admin User</h6>
-        ) : (
-          <h6>Normal User</h6>
-        )}
         <form onSubmit={this.handleSubmit}>
           {this.renderReadOnlyInput(
             "username",
