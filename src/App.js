@@ -4,8 +4,6 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { ToastContainer } from "react-toastify";
 import Movies from "./components/movies";
-import Customers from "./components/customers";
-import Rentals from "./components/rentals";
 import NotFound from "./components/notFound";
 import NavBar from "./components/navBar";
 import MovieForm from "./components/movieForm";
@@ -14,6 +12,7 @@ import RegisterForm from "./components/registerForm";
 import config from "./config.json";
 import "react-toastify/dist/ReactToastify.css";
 import { getUser } from "./services/userService";
+import Profile from "./components/Profile";
 
 class App extends Component {
   state = {
@@ -54,6 +53,12 @@ class App extends Component {
           <Routes>
             <Route path="/register" element={<RegisterForm />} />
             <Route
+              path="/profile"
+              element={
+                loggedIn ? <Profile uid={uid} /> : <Navigate to="/login" />
+              }
+            />
+            <Route
               path="/login"
               element={loggedIn ? <Navigate to="/movies" /> : <LoginForm />}
             />
@@ -70,8 +75,6 @@ class App extends Component {
               }
             />
             <Route path="/movies" element={<Movies uid={uid} user={user} />} />
-            <Route path="/customers" element={<Customers />} />
-            <Route path="/rentals" element={<Rentals />} />
             <Route path="/not-found" element={<NotFound />} />
             <Route index element={<Navigate to="/movies" />} />
             <Route path="*" element={<Navigate to="/not-found" />} />

@@ -8,7 +8,7 @@ const NavBar = ({ user }) => {
     <nav className="navbar navbar-expand-sm navbar-light bg-light">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
-          Vidly
+          Filmy
         </Link>
         <button
           className="navbar-toggler"
@@ -25,12 +25,6 @@ const NavBar = ({ user }) => {
           <div className="navbar-nav">
             <NavLink className="nav-item nav-link" to="/movies">
               Movies
-            </NavLink>
-            <NavLink className="nav-item nav-link" to="/customers">
-              Customers
-            </NavLink>
-            <NavLink className="nav-item nav-link" to="/rentals">
-              Rentals
             </NavLink>
             {user.name ? (
               <React.Fragment>

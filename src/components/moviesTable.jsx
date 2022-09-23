@@ -5,13 +5,6 @@ import Table from "./common/table";
 
 class MoviesTable extends Component {
   columns = [
-    {
-      path: "title",
-      label: "Title",
-      content: (movie) => (
-        <Link to={`/movies/${movie._id}`}>{movie.title}</Link>
-      ),
-    },
     { path: "genre.name", label: "Genre" },
     { path: "numberInStock", label: "Stock" },
     { path: "dailyRentalRate", label: "Rate" },
@@ -35,6 +28,14 @@ class MoviesTable extends Component {
     ),
   };
 
+  movieNameColumn = { path: "title", label: "Title" };
+
+  movieLinkColumn = {
+    path: "title",
+    label: "Title",
+    content: (movie) => <Link to={`/movies/${movie._id}`}>{movie.title}</Link>,
+  };
+
   render() {
     const { movies, sortColumn, onSort } = this.props;
     return (
@@ -42,8 +43,8 @@ class MoviesTable extends Component {
         items={movies}
         columns={
           this.props.user.admin
-            ? [...this.columns, this.deleteColumn]
-            : this.columns
+            ? [this.movieLinkColumn, ...this.columns, this.deleteColumn]
+            : [this.movieNameColumn, ...this.columns]
         }
         sortColumn={sortColumn}
         onSort={onSort}

@@ -108,18 +108,9 @@ class Movies extends Component {
   };
 
   render() {
-    const {
-      pageSize,
-      currentPage,
-      sortColumn,
-      movies: allMovies,
-      searchQuery,
-    } = this.state;
+    const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
 
     const { moviesCount, data: movies } = this.getPagedData();
-
-    if (allMovies.length === 0)
-      return <p>There are no movies in the database</p>;
     return (
       <div className="row">
         <div className="col-3">
@@ -135,7 +126,6 @@ class Movies extends Component {
               New Movie
             </Link>
           ) : null}
-          <p>Showing {moviesCount} movies in the database</p>
           <SearchBox value={searchQuery} onChange={this.handleSearch} />
           <MoviesTable
             user={this.props.user}

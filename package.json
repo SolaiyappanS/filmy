@@ -1,6 +1,6 @@
 {
-  "name": "vidly",
-  "version": "0.1.0",
+  "name": "filmy",
+  "version": "1.1.0",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.2",

@@ -64,6 +64,18 @@ class Form extends Component {
     );
   };
 
+  renderReadOnlyInput = (name, label, value, type = "text") => {
+    return (
+      <Input
+        type={type}
+        value={value}
+        name={name}
+        label={label}
+        disabled={true}
+      />
+    );
+  };
+
   renderSelect = (name, label, options) => {
     const { data, errors } = this.state;
     return (

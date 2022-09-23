@@ -62,3 +62,18 @@ export async function getUser(uid) {
   });
   return user;
 }
+
+export async function saveUser(name, uid) {
+  await set(ref(db, "users/" + uid + "/name"), name)
+    .then(() =>
+      toast.success(
+        'Profile name changed to "' +
+          name +
+          '" successfully. Refresh the page to see the changes.'
+      )
+    )
+    .catch((err) => {
+      toast.error(`Error: ${organizeError(err.code)}`);
+    });
+  return name + uid;
+}
