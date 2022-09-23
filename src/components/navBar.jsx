@@ -8,7 +8,13 @@ const NavBar = ({ user }) => {
     <nav className="navbar navbar-expand-sm navbar-light bg-light">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
-          <img src={Logo} alt="Bootstrap" width="50" title="Filmy" /> Filmy
+          <img
+            src={Logo}
+            alt="Bootstrap"
+            width="50"
+            title="Filmy Movie Database"
+          />{" "}
+          FMDb
         </Link>
         <button
           className="navbar-toggler"
