@@ -23,15 +23,15 @@ const NavBar = ({ user }) => {
         </button>
         <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div className="nav nav-pills ">
-            <NavLink className="nav-item nav-link mx-1" to="/movies">
+            <NavLink className="nav-item nav-link m-1" to="/movies">
               Movies
             </NavLink>
-            <NavLink className="nav-item nav-link mx-1" to="/mymovies">
+            <NavLink className="nav-item nav-link m-1" to="/mymovies">
               My Movies
             </NavLink>
             {user.name ? (
               <div className="nav">
-                <NavLink className="nav-item nav-link mx-1" to="/profile">
+                <NavLink className="nav-item nav-link m-1" to="/profile">
                   {user.name}
                   {user.admin ? (
                     <span style={{ color: "orange" }} title="Admin User">
@@ -40,7 +40,7 @@ const NavBar = ({ user }) => {
                   ) : null}
                 </NavLink>
                 <div
-                  className="nav-item nav-link mx-1 bg-danger active"
+                  className="nav-item nav-link m-1 bg-danger active"
                   style={{ cursor: "pointer" }}
                   onClick={async () => {
                     await logout();
@@ -52,10 +52,10 @@ const NavBar = ({ user }) => {
               </div>
             ) : (
               <div className="nav">
-                <NavLink className="nav-item nav-link mx-1" to="/signup">
+                <NavLink className="nav-item nav-link m-1" to="/signup">
                   Sign Up
                 </NavLink>
-                <NavLink className="nav-item nav-link mx-1" to="/login">
+                <NavLink className="nav-item nav-link m-1" to="/login">
                   Login
                 </NavLink>
               </div>
