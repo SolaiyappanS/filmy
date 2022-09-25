@@ -8,15 +8,15 @@ import NotFound from "./components/notFound";
 import NavBar from "./components/navBar";
 import MovieForm from "./components/movieForm";
 import LoginForm from "./components/loginForm";
-import RegisterForm from "./components/registerForm";
+import SignUpForm from "./components/signUpForm";
 import config from "./config.json";
 import "react-toastify/dist/ReactToastify.css";
 import { getUser } from "./services/userService";
 import Profile from "./components/Profile";
+import MyMovies from "./components/myMovies";
 
 class App extends Component {
   state = {
-    uid: "",
     user: {
       admin: false,
       name: "",
@@ -30,8 +30,11 @@ class App extends Component {
     const auth = getAuth(app);
     auth.onAuthStateChanged(async (cred) => {
       if (cred) {
-        this.setState({ uid: cred.uid, loggedIn: true });
-        await getUser(cred.uid).then((user) => this.setState({ user }));
+        this.setState({ loggedIn: true });
+        await getUser().then((user) => {
+          if (user) this.setState({ user });
+          else this.setState({ loggedIn: false });
+        });
       } else {
         this.setState({ loggedIn: false });
       }
@@ -44,19 +47,17 @@ class App extends Component {
 
   render() {
     const { admin } = this.state.user;
-    const { loggedIn, uid, user } = this.state;
+    const { loggedIn, user } = this.state;
     return (
       <React.Fragment>
         <NavBar user={user} />
         <main className="container">
           <ToastContainer />
           <Routes>
-            <Route path="/register" element={<RegisterForm />} />
+            <Route path="/signup" element={<SignUpForm />} />
             <Route
               path="/profile"
-              element={
-                loggedIn ? <Profile uid={uid} /> : <Navigate to="/login" />
-              }
+              element={loggedIn ? <Profile /> : <Navigate to="/login" />}
             />
             <Route
               path="/login"
@@ -66,7 +67,7 @@ class App extends Component {
               path="/movies/:id"
               element={
                 admin ? (
-                  <MovieForm uid={uid} />
+                  <MovieForm />
                 ) : loggedIn ? (
                   <Navigate to="/movies" />
                 ) : (
@@ -74,7 +75,16 @@ class App extends Component {
                 )
               }
             />
-            <Route path="/movies" element={<Movies uid={uid} user={user} />} />
+            <Route
+              path="/movies"
+              element={<Movies user={user} loggedIn={loggedIn} />}
+            />
+            <Route
+              path="/mymovies"
+              element={
+                loggedIn ? <MyMovies user={user} /> : <Navigate to="/login" />
+              }
+            />
             <Route path="/not-found" element={<NotFound />} />
             <Route index element={<Navigate to="/movies" />} />
             <Route path="*" element={<Navigate to="/not-found" />} />

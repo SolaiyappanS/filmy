@@ -7,14 +7,8 @@ const NavBar = ({ user }) => {
   return (
     <nav className="navbar navbar-expand-sm navbar-light bg-light">
       <div className="container-fluid">
-        <Link className="navbar-brand" to="/">
-          <img
-            src={Logo}
-            alt="Bootstrap"
-            width="50"
-            title="Filmy Movie Database"
-          />{" "}
-          FMDb
+        <Link className="navbar-brand" to="/" title="Filmy Movie Database">
+          <img src={Logo} alt="Bootstrap" width="50" /> Filmy{" "}
         </Link>
         <button
           className="navbar-toggler"
@@ -28,22 +22,16 @@ const NavBar = ({ user }) => {
           <span className="navbar-toggler-icon" />
         </button>
         <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div className="navbar-nav">
-            <NavLink className="nav-item nav-link" to="/movies">
+          <div className="nav nav-pills ">
+            <NavLink className="nav-item nav-link mx-1" to="/movies">
               Movies
             </NavLink>
+            <NavLink className="nav-item nav-link mx-1" to="/mymovies">
+              My Movies
+            </NavLink>
             {user.name ? (
-              <React.Fragment>
-                <button
-                  className="btn btn-success"
-                  onClick={async () => {
-                    await logout();
-                    window.location = "/";
-                  }}
-                >
-                  Logout
-                </button>
-                <NavLink className="nav-item nav-link" to="/profile">
+              <div className="nav">
+                <NavLink className="nav-item nav-link mx-1" to="/profile">
                   {user.name}
                   {user.admin ? (
                     <span style={{ color: "orange" }} title="Admin User">
@@ -51,16 +39,26 @@ const NavBar = ({ user }) => {
                     </span>
                   ) : null}
                 </NavLink>
-              </React.Fragment>
+                <div
+                  className="nav-item nav-link mx-1 bg-danger active"
+                  style={{ cursor: "pointer" }}
+                  onClick={async () => {
+                    await logout();
+                    window.location = "/";
+                  }}
+                >
+                  Logout
+                </div>
+              </div>
             ) : (
-              <React.Fragment>
-                <NavLink className="nav-item nav-link" to="/login">
+              <div className="nav">
+                <NavLink className="nav-item nav-link mx-1" to="/signup">
+                  Sign Up
+                </NavLink>
+                <NavLink className="nav-item nav-link mx-1" to="/login">
                   Login
                 </NavLink>
-                <NavLink className="nav-item nav-link" to="/register">
-                  Register
-                </NavLink>
-              </React.Fragment>
+              </div>
             )}
           </div>
         </div>

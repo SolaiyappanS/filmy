@@ -4,6 +4,7 @@ import { withRouterAndNavigate } from "../services/routerService";
 import Form from "./common/form";
 import { getGenres } from "../services/genreService";
 import { getMovie, saveMovie } from "./../services/movieService";
+import { getUid } from "../services/userService";
 
 class MovieForm extends Form {
   state = {
@@ -48,7 +49,7 @@ class MovieForm extends Form {
   };
 
   doSubmit = async () => {
-    await saveMovie(this.state.data, this.props.uid);
+    await saveMovie(this.state.data, getUid());
 
     this.props.navigate("/movies", { replace: false });
   };
@@ -62,7 +63,7 @@ class MovieForm extends Form {
           {this.renderSelect("genreId", "Genre", this.state.genres)}
           {this.renderInput("numberInStock", "Number In Stock", "number")}
           {this.renderInput("dailyRentalRate", "Rating", "number")}
-          {this.renderButton("Save")}
+          {this.renderButton("Save Movie")}
         </form>
       </div>
     );

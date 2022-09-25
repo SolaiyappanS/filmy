@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import Like from "./common/like";
 import Table from "./common/table";
 
 class MoviesTable extends Component {
@@ -8,13 +7,31 @@ class MoviesTable extends Component {
     { path: "genre.name", label: "Genre" },
     { path: "numberInStock", label: "Stock" },
     { path: "dailyRentalRate", label: "Rating" },
-    {
-      key: "Like",
-      content: (movie) => (
-        <Like liked={movie.liked} onClick={() => this.props.onLike(movie)} />
-      ),
-    },
   ];
+
+  addMovieColumn = {
+    key: "AddMovie",
+    content: (movie) => {
+      if (
+        this.props.user.movies &&
+        Object.values(this.props.user.movies).includes(movie._id)
+      )
+        return (
+          <button className="btn btn-success btn-sm disabled">
+            Added to My Movies
+          </button>
+        );
+      else
+        return (
+          <button
+            onClick={() => this.props.onAddMovie(movie)}
+            className="btn btn-primary btn-sm"
+          >
+            Add to My Movies
+          </button>
+        );
+    },
+  };
 
   deleteColumn = {
     key: "Delete",
@@ -46,8 +63,15 @@ class MoviesTable extends Component {
       <Table
         items={movies}
         columns={
-          this.props.user.admin
-            ? [this.movieLinkColumn, ...this.columns, this.deleteColumn]
+          this.props.loggedIn
+            ? this.props.user.admin
+              ? [
+                  this.movieLinkColumn,
+                  ...this.columns,
+                  this.addMovieColumn,
+                  this.deleteColumn,
+                ]
+              : [this.movieNameColumn, ...this.columns, this.addMovieColumn]
             : [this.movieNameColumn, ...this.columns]
         }
         sortColumn={sortColumn}

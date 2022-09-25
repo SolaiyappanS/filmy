@@ -1,19 +1,17 @@
 import React, { Component } from "react";
 import ld from "lodash";
-import { Link } from "react-router-dom";
-import MoviesTable from "./moviesTable";
+import MyMoviesTable from "./myMoviesTable";
 import ListGroup from "./common/listGroup";
 import SearchBox from "./common/searchBox";
 import Pagination from "./common/pagination";
-import { getMovies, deleteMovie, addMovie } from "../services/movieService";
+import { getUserMovies, removeMovie } from "../services/movieService";
 import { getGenres } from "../services/genreService";
 import { paginate } from "../utils/paginate";
 import DropDown from "./common/dropDown";
-import { getUid, getUser } from "../services/userService";
+import { getUid } from "../services/userService";
 
-class Movies extends Component {
+class MyMovies extends Component {
   state = {
-    user: { admin: false },
     movies: [],
     genres: [],
     pageSize: 5,
@@ -24,13 +22,8 @@ class Movies extends Component {
   };
 
   async updateMovieDatabase() {
-    const movies = await getMovies();
+    const movies = await getUserMovies();
     this.setState({ movies });
-  }
-
-  async updateUser() {
-    const user = await getUser();
-    this.setState({ user });
   }
 
   async updateGenreDatabase() {
@@ -42,20 +35,7 @@ class Movies extends Component {
   async componentDidMount() {
     await this.updateGenreDatabase();
     await this.updateMovieDatabase();
-    await this.updateUser();
   }
-
-  handleAddMovie = async (movie) => {
-    await addMovie(movie._id, getUid()).then((snap) => {
-      if (snap) this.updateUser();
-    });
-  };
-
-  handleDelete = async (movie) => {
-    await deleteMovie(movie._id, getUid()).then((snap) => {
-      if (snap) this.updateMovieDatabase();
-    });
-  };
 
   handlePageChange = (page) => {
     this.setState({ currentPage: page });
@@ -75,6 +55,12 @@ class Movies extends Component {
 
   handleSort = (sortColumn) => {
     this.setState({ sortColumn });
+  };
+
+  handleRemove = async (movie) => {
+    await removeMovie(movie._id, getUid()).then((snap) => {
+      if (snap) this.updateMovieDatabase();
+    });
   };
 
   getPagedData = () => {
@@ -124,12 +110,7 @@ class Movies extends Component {
         </div>
         <div className="col">
           <div className="d-flex flex-row my-3">
-            {this.state.user.admin ? (
-              <Link to="/movies/new" className="btn btn-primary mx-2">
-                Add Movie
-              </Link>
-            ) : null}
-            <div className="d-block d-sm-block d-md-none">
+            <div className="d-block d-sm-block d-md-none mx-1">
               <DropDown
                 items={this.state.genres}
                 onItemSelect={this.handleGenreSelect}
@@ -139,14 +120,12 @@ class Movies extends Component {
           </div>
           <SearchBox value={searchQuery} onChange={this.handleSearch} />
           <div className="text-center">
-            <MoviesTable
-              user={this.state.user}
-              loggedIn={this.props.loggedIn}
+            <MyMoviesTable
+              user={this.props.user}
               movies={movies}
               sortColumn={sortColumn}
-              onDelete={this.handleDelete}
-              onAddMovie={this.handleAddMovie}
               onSort={this.handleSort}
+              onRemove={this.handleRemove}
             />
             <Pagination
               itemsCount={moviesCount}
@@ -161,4 +140,4 @@ class Movies extends Component {
   }
 }
 
-export default Movies;
+export default MyMovies;

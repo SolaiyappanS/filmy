@@ -4,15 +4,16 @@ import Form from "./common/form";
 import { register } from "../services/userService";
 import { withNavigate } from "../services/routerService";
 
-class RegisterForm extends Form {
+class SignUpForm extends Form {
   state = {
-    data: { username: "", password: "", name: "" },
+    data: { username: "", password: "", confirmPassword: "", name: "" },
     errors: {},
   };
 
   schema = {
     username: Joi.string().email().required().label("Username"),
-    password: Joi.string().min(5).required().label("Password"),
+    password: Joi.string().min(6).required().label("Password"),
+    confirmPassword: Joi.string().min(6).required().label("Password"),
     name: Joi.string().min(3).required().label("Name"),
   };
 
@@ -27,16 +28,17 @@ class RegisterForm extends Form {
   render() {
     return (
       <div>
-        <h1>Register</h1>
+        <h1>Sign Up with Email</h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("username", "Username")}
           {this.renderInput("password", "Password", "password")}
+          {this.renderInput("confirmPassword", "Confirm password", "password")}
           {this.renderInput("name", "Name")}
-          {this.renderButton("Submit")}
+          {this.renderButton("Sign Up")}
         </form>
       </div>
     );
   }
 }
 
-export default withNavigate(RegisterForm);
+export default withNavigate(SignUpForm);
