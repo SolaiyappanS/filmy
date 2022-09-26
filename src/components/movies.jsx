@@ -5,7 +5,12 @@ import MoviesTable from "./moviesTable";
 import ListGroup from "./common/listGroup";
 import SearchBox from "./common/searchBox";
 import Pagination from "./common/pagination";
-import { getMovies, deleteMovie, addMovie } from "../services/movieService";
+import {
+  getMovies,
+  deleteMovie,
+  addMovie,
+  removeMovie,
+} from "../services/movieService";
 import { getGenres } from "../services/genreService";
 import { paginate } from "../utils/paginate";
 import DropDown from "./common/dropDown";
@@ -47,6 +52,12 @@ class Movies extends Component {
 
   handleAddMovie = async (movie) => {
     await addMovie(movie._id, getUid()).then((snap) => {
+      if (snap) this.updateUser();
+    });
+  };
+
+  handleRemoveMovie = async (movie) => {
+    await removeMovie(movie._id, getUid()).then((snap) => {
       if (snap) this.updateUser();
     });
   };
@@ -115,7 +126,7 @@ class Movies extends Component {
     const { moviesCount, data: movies } = this.getPagedData();
     return (
       <div className="row">
-        <div className="col-3 d-none d-sm-none d-md-block">
+        <div className="col-3 d-none d-sm-none d-md-block my-3">
           <ListGroup
             items={this.state.genres}
             onItemSelect={this.handleGenreSelect}
@@ -124,7 +135,7 @@ class Movies extends Component {
         </div>
         <div className="col">
           <div className="d-flex flex-row my-3">
-            {this.state.user.admin ? (
+            {this.state.user && this.state.user.admin ? (
               <Link to="/movies/new" className="btn btn-primary mx-2">
                 Add Movie
               </Link>
@@ -141,11 +152,12 @@ class Movies extends Component {
           <div className="text-center">
             <MoviesTable
               user={this.state.user}
-              loggedIn={this.props.loggedIn}
+              loggedIn={getUid()}
               movies={movies}
               sortColumn={sortColumn}
               onDelete={this.handleDelete}
               onAddMovie={this.handleAddMovie}
+              onRemoveMovie={this.handleRemoveMovie}
               onSort={this.handleSort}
             />
             <Pagination

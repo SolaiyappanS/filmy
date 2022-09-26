@@ -23,7 +23,7 @@ export async function register(user) {
     await createUserWithEmailAndPassword(auth, user.username, user.password)
       .then(async (cred) => {
         await set(ref(db, "users/" + cred.user.uid), {
-          admin: user.username.endsWith("@admin.example.com"),
+          admin: false,
           username: user.username,
           name: user.name,
         });
@@ -74,7 +74,7 @@ export function getUid() {
   if (auth.currentUser && auth.currentUser.uid) {
     uid = auth.currentUser.uid;
   }
-  return uid;
+  return uid === "" ? false : uid;
 }
 
 export async function getUser() {

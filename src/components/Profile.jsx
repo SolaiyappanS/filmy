@@ -14,10 +14,14 @@ class Profile extends Form {
     name: Joi.string().min(3).required().label("Name"),
   };
 
-  async componentDidMount() {
+  async updateUser() {
     const user = await getUser();
     const data = { name: user.name };
     this.setState({ data, user });
+  }
+
+  async componentDidMount() {
+    await this.updateUser();
   }
 
   doSubmit = async () => {

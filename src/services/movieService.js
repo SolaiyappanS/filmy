@@ -60,7 +60,6 @@ export async function saveMovie(movie, uid) {
       movieInDb.title = movie.title;
       movieInDb.genre = genres.find((g) => g._id === movie.genreId);
       movieInDb.numberInStock = movie.numberInStock;
-      movieInDb.dailyRentalRate = movie.dailyRentalRate;
 
       if (!movieInDb._id) {
         movieInDb._id = Date.now().toString();
@@ -76,9 +75,11 @@ export async function saveMovie(movie, uid) {
 
 export async function deleteMovie(id, uid) {
   var result = false;
+  const movieName = await getMovieName(id);
   await isAdmin(uid).then(async (snap) => {
     if (snap === true) {
       await remove(ref(db, "movies/" + id));
+      toast.success(movieName + " deleted from All Movies database");
       result = true;
     } else {
       toast.warn("Permission denied");
@@ -155,5 +156,5 @@ function filterObject(obj, callback) {
 async function getMovieName(id) {
   const movie = await getMovie(id);
   if (movie) return movie.title;
-  return "No movie";
+  return "Movie";
 }

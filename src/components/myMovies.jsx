@@ -8,10 +8,11 @@ import { getUserMovies, removeMovie } from "../services/movieService";
 import { getGenres } from "../services/genreService";
 import { paginate } from "../utils/paginate";
 import DropDown from "./common/dropDown";
-import { getUid } from "../services/userService";
+import { getUid, getUser } from "../services/userService";
 
 class MyMovies extends Component {
   state = {
+    user: {},
     movies: [],
     genres: [],
     pageSize: 5,
@@ -20,6 +21,11 @@ class MyMovies extends Component {
     selectedGenre: { _id: "", name: "All Genres" },
     sortColumn: { path: "title", order: "asc" },
   };
+
+  async updateUser() {
+    const user = await getUser();
+    this.setState({ user });
+  }
 
   async updateMovieDatabase() {
     const movies = await getUserMovies();
@@ -101,7 +107,7 @@ class MyMovies extends Component {
     const { moviesCount, data: movies } = this.getPagedData();
     return (
       <div className="row">
-        <div className="col-3 d-none d-sm-none d-md-block">
+        <div className="col-3 d-none d-sm-none d-md-block my-3">
           <ListGroup
             items={this.state.genres}
             onItemSelect={this.handleGenreSelect}
@@ -121,7 +127,7 @@ class MyMovies extends Component {
           <SearchBox value={searchQuery} onChange={this.handleSearch} />
           <div className="text-center">
             <MyMoviesTable
-              user={this.props.user}
+              user={this.state.user}
               movies={movies}
               sortColumn={sortColumn}
               onSort={this.handleSort}

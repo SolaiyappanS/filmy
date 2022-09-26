@@ -8,7 +8,7 @@ import { getUid } from "../services/userService";
 
 class MovieForm extends Form {
   state = {
-    data: { title: "", genreId: "", numberInStock: "", dailyRentalRate: "" },
+    data: { title: "", genreId: "", numberInStock: "" },
     genres: [],
     errors: {},
   };
@@ -22,7 +22,6 @@ class MovieForm extends Form {
       .min(0)
       .max(100)
       .label("Number in Stock"),
-    dailyRentalRate: Joi.number().required().min(0).max(10).label("Rating"),
   };
 
   async componentDidMount() {
@@ -44,7 +43,6 @@ class MovieForm extends Form {
       title: movie.title,
       genreId: movie.genre._id,
       numberInStock: movie.numberInStock,
-      dailyRentalRate: movie.dailyRentalRate,
     };
   };
 
@@ -61,8 +59,13 @@ class MovieForm extends Form {
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("title", "Title")}
           {this.renderSelect("genreId", "Genre", this.state.genres)}
-          {this.renderInput("numberInStock", "Number In Stock", "number")}
-          {this.renderInput("dailyRentalRate", "Rating", "number")}
+          {this.renderInput(
+            "numberInStock",
+            this.props.params.id && this.props.params.id === "new"
+              ? "Initial Stock"
+              : "Available Stock",
+            "number"
+          )}
           {this.renderButton("Save Movie")}
         </form>
       </div>

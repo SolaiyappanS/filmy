@@ -19,8 +19,6 @@ class App extends Component {
   state = {
     user: {
       admin: false,
-      name: "",
-      username: "",
     },
     loggedIn: false,
   };
@@ -47,10 +45,10 @@ class App extends Component {
 
   render() {
     const { admin } = this.state.user;
-    const { loggedIn, user } = this.state;
+    const { loggedIn } = this.state;
     return (
       <React.Fragment>
-        <NavBar user={user} />
+        <NavBar />
         <main className="container">
           <ToastContainer />
           <Routes>
@@ -75,15 +73,10 @@ class App extends Component {
                 )
               }
             />
-            <Route
-              path="/movies"
-              element={<Movies user={user} loggedIn={loggedIn} />}
-            />
+            <Route path="/movies" element={<Movies />} />
             <Route
               path="/mymovies"
-              element={
-                loggedIn ? <MyMovies user={user} /> : <Navigate to="/login" />
-              }
+              element={loggedIn ? <MyMovies /> : <Navigate to="/login" />}
             />
             <Route path="/not-found" element={<NotFound />} />
             <Route index element={<Navigate to="/movies" />} />

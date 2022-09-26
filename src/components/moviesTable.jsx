@@ -6,7 +6,6 @@ class MoviesTable extends Component {
   columns = [
     { path: "genre.name", label: "Genre" },
     { path: "numberInStock", label: "Stock" },
-    { path: "dailyRentalRate", label: "Rating" },
   ];
 
   addMovieColumn = {
@@ -17,7 +16,10 @@ class MoviesTable extends Component {
         Object.values(this.props.user.movies).includes(movie._id)
       )
         return (
-          <button className="btn btn-success btn-sm disabled">
+          <button
+            onClick={() => this.props.onRemoveMovie(movie)}
+            className="btn btn-success btn-sm"
+          >
             Added to My Movies
           </button>
         );
@@ -40,7 +42,7 @@ class MoviesTable extends Component {
         onClick={() => this.props.onDelete(movie)}
         className="btn btn-danger btn-sm"
       >
-        Delete
+        Delete Movie
       </button>
     ),
   };
