@@ -2,7 +2,7 @@ import React from "react";
 import Joi from "joi-browser";
 import Form from "./common/form";
 import { login } from "../services/userService";
-import { withNavigate } from "../services/routerService";
+import { withRouterAndNavigate } from "../services/routerService";
 
 class LoginForm extends Form {
   state = {
@@ -17,14 +17,17 @@ class LoginForm extends Form {
 
   doSubmit = async () => {
     if (await login(this.state.data)) {
-      this.props.navigate("/movies");
+      const thenPath = this.props.searchParams.get("then")
+        ? "/" + this.props.searchParams.get("then")
+        : "";
+      this.props.navigate(thenPath);
     }
   };
 
   render() {
     return (
       <div>
-        <h1>Login Form</h1>
+        <h1>Login</h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("username", "Username")}
           {this.renderInput("password", "Password", "password")}
@@ -35,4 +38,4 @@ class LoginForm extends Form {
   }
 }
 
-export default withNavigate(LoginForm);
+export default withRouterAndNavigate(LoginForm);

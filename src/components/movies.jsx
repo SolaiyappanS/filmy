@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import ld from "lodash";
 import { Link } from "react-router-dom";
+import ld from "lodash";
 import MoviesTable from "./moviesTable";
 import ListGroup from "./common/listGroup";
 import SearchBox from "./common/searchBox";
 import Pagination from "./common/pagination";
+import DropDown from "./common/dropDown";
 import {
   getMovies,
   deleteMovie,
@@ -12,9 +13,8 @@ import {
   removeMovie,
 } from "../services/movieService";
 import { getGenres } from "../services/genreService";
-import { paginate } from "../utils/paginate";
-import DropDown from "./common/dropDown";
 import { getUid, getUser } from "../services/userService";
+import { paginate } from "../utils/paginate";
 
 class Movies extends Component {
   state = {

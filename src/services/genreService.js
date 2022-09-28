@@ -1,7 +1,7 @@
+import { toast } from "react-toastify";
 import { initializeApp } from "firebase/app";
 import { child, get, getDatabase, ref } from "firebase/database";
 import config from "../config.json";
-import { toast } from "react-toastify";
 
 const app = initializeApp(config.fbConfig);
 const dbRef = ref(getDatabase(app));

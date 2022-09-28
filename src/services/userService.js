@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { initializeApp } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
@@ -6,7 +7,6 @@ import {
   signOut,
 } from "firebase/auth";
 import { get, getDatabase, ref, set } from "firebase/database";
-import { toast } from "react-toastify";
 import config from "../config.json";
 
 const app = initializeApp(config.fbConfig);

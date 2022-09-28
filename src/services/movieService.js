@@ -1,15 +1,30 @@
+import { toast } from "react-toastify";
 import { initializeApp } from "firebase/app";
 import { get, getDatabase, push, ref, remove, set } from "firebase/database";
-import config from "../config.json";
-import { toast } from "react-toastify";
 import { getGenres } from "./genreService";
 import { getUid } from "./userService";
+import config from "../config.json";
 
 const app = initializeApp(config.fbConfig);
 const db = getDatabase(app);
 
+async function isAdmin(uid) {
+  var result = false;
+  await get(ref(db, "users/" + uid)).then((snap) => {
+    result = snap.val().admin;
+  });
+  return result;
+}
+
+function filterObject(obj, callback) {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([key, val]) => callback(val, key))
+  );
+}
+
 export async function getMovies() {
   var movies = {};
+
   await get(ref(db, "movies"))
     .then((snapshot) => {
       if (snapshot.exists()) {
@@ -19,11 +34,29 @@ export async function getMovies() {
     .catch((error) => {
       toast.error(error);
     });
+
   return Object.values(movies);
+}
+
+async function getMovieIds() {
+  var movies = {};
+
+  await get(ref(db, "movies"))
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        movies = snapshot.val();
+      }
+    })
+    .catch((error) => {
+      toast.error(error);
+    });
+
+  return Object.keys(movies);
 }
 
 export async function getMovie(id) {
   var movie = {};
+
   await get(ref(db, "movies/" + id)).then((snap) => {
     movie = snap.val();
   });
@@ -35,9 +68,13 @@ export async function getUserMovies() {
 
   var allMovies = {};
   var userMovieIds = [];
+
+  await updateUserMovies(uid);
+
   await get(ref(db, "users/" + uid + "/movies")).then((snap) => {
     if (snap.exists()) userMovieIds = Object.values(snap.val());
   });
+
   await get(ref(db, "movies"))
     .then((snapshot) => {
       if (snapshot.exists()) allMovies = snapshot.val();
@@ -51,12 +88,37 @@ export async function getUserMovies() {
   );
 }
 
+async function updateUserMovies(uid) {
+  const allMovieIds = await getMovieIds();
+  var userMovieIds = [];
+
+  await get(ref(db, "users/" + uid + "/movies")).then((snap) => {
+    if (snap.exists()) userMovieIds = Object.values(snap.val());
+  });
+
+  const updatedUserMovieIds = userMovieIds.filter((id) =>
+    allMovieIds.includes(id)
+  );
+
+  await set(ref(db, "users/" + uid + "/movies"), updatedUserMovieIds);
+}
+
+async function getMovieName(id) {
+  const movie = await getMovie(id);
+
+  if (movie) return movie.title;
+
+  return "Movie";
+}
+
 export async function saveMovie(movie, uid) {
   await isAdmin(uid).then(async (snap) => {
     if (snap === true) {
       const movies = await getMovies();
       const genres = await getGenres();
+
       let movieInDb = movies.find((m) => m._id === movie._id) || {};
+
       movieInDb.title = movie.title;
       movieInDb.genre = genres.find((g) => g._id === movie.genreId);
       movieInDb.numberInStock = movie.numberInStock;
@@ -76,6 +138,7 @@ export async function saveMovie(movie, uid) {
 export async function deleteMovie(id, uid) {
   var result = false;
   const movieName = await getMovieName(id);
+
   await isAdmin(uid).then(async (snap) => {
     if (snap === true) {
       await remove(ref(db, "movies/" + id));
@@ -86,6 +149,9 @@ export async function deleteMovie(id, uid) {
       result = false;
     }
   });
+
+  await updateUserMovies(uid);
+
   return result;
 }
 
@@ -137,24 +203,4 @@ export async function removeMovie(id, uid) {
     result = false;
   }
   return result;
-}
-
-export async function isAdmin(uid) {
-  var result = false;
-  await get(ref(db, "users/" + uid)).then((snap) => {
-    result = snap.val().admin;
-  });
-  return result;
-}
-
-function filterObject(obj, callback) {
-  return Object.fromEntries(
-    Object.entries(obj).filter(([key, val]) => callback(val, key))
-  );
-}
-
-async function getMovieName(id) {
-  const movie = await getMovie(id);
-  if (movie) return movie.title;
-  return "Movie";
 }

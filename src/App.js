@@ -3,17 +3,17 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { ToastContainer } from "react-toastify";
+import config from "./config.json";
 import Movies from "./components/movies";
 import NotFound from "./components/notFound";
 import NavBar from "./components/navBar";
 import MovieForm from "./components/movieForm";
 import LoginForm from "./components/loginForm";
 import SignUpForm from "./components/signUpForm";
-import config from "./config.json";
-import "react-toastify/dist/ReactToastify.css";
-import { getUser } from "./services/userService";
 import Profile from "./components/Profile";
 import MyMovies from "./components/myMovies";
+import { getUser } from "./services/userService";
+import "react-toastify/dist/ReactToastify.css";
 
 class App extends Component {
   state = {
@@ -55,7 +55,9 @@ class App extends Component {
             <Route path="/signup" element={<SignUpForm />} />
             <Route
               path="/profile"
-              element={loggedIn ? <Profile /> : <Navigate to="/login" />}
+              element={
+                loggedIn ? <Profile /> : <Navigate to="/login?then=profile" />
+              }
             />
             <Route
               path="/login"
@@ -76,11 +78,16 @@ class App extends Component {
             <Route path="/movies" element={<Movies />} />
             <Route
               path="/mymovies"
-              element={loggedIn ? <MyMovies /> : <Navigate to="/login" />}
+              element={
+                loggedIn ? <MyMovies /> : <Navigate to="/login?then=mymovies" />
+              }
             />
             <Route path="/not-found" element={<NotFound />} />
             <Route index element={<Navigate to="/movies" />} />
-            <Route path="*" element={<Navigate to="/not-found" />} />
+            <Route
+              path="*"
+              element={<Navigate to="/not-found" replace={false} />}
+            />
           </Routes>
         </main>
       </React.Fragment>

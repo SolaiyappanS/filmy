@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import ld from "lodash";
-import MyMoviesTable from "./myMoviesTable";
+import DropDown from "./common/dropDown";
 import ListGroup from "./common/listGroup";
 import SearchBox from "./common/searchBox";
 import Pagination from "./common/pagination";
+import MyMoviesTable from "./myMoviesTable";
 import { getUserMovies, removeMovie } from "../services/movieService";
 import { getGenres } from "../services/genreService";
-import { paginate } from "../utils/paginate";
-import DropDown from "./common/dropDown";
 import { getUid, getUser } from "../services/userService";
+import { paginate } from "../utils/paginate";
 
 class MyMovies extends Component {
   state = {
