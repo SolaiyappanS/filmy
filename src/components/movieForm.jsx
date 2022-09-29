@@ -1,7 +1,7 @@
 import React from "react";
 import Joi from "joi-browser";
 import Form from "./common/form";
-import { withRouterAndNavigate } from "../services/routerService";
+import withRouter from "../services/routerService";
 import { getGenres } from "../services/genreService";
 import { getMovie, saveMovie } from "./../services/movieService";
 import { getUid } from "../services/userService";
@@ -73,4 +73,4 @@ class MovieForm extends Form {
   }
 }
 
-export default withRouterAndNavigate(MovieForm);
+export default withRouter(MovieForm);

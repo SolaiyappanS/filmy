@@ -42,7 +42,7 @@ export async function login(user) {
   let result = false;
   await signInWithEmailAndPassword(auth, user.username, user.password)
     .then((cred) => {
-      toast.success("Logged in as " + cred.user.email);
+      toast.success("Logged in with " + cred.user.email);
       result = true;
     })
     .catch((err) => {

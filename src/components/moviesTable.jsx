@@ -61,6 +61,7 @@ class MoviesTable extends Component {
 
   render() {
     const { movies, sortColumn, onSort } = this.props;
+    if (movies.length <= 0) return <p>No movies to show in the database</p>;
     return (
       <Table
         items={movies}

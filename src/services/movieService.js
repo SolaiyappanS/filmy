@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 import { initializeApp } from "firebase/app";
-import { get, getDatabase, push, ref, remove, set } from "firebase/database";
+import { get, getDatabase, ref, remove, set } from "firebase/database";
 import { getGenres } from "./genreService";
 import { getUid } from "./userService";
 import config from "../config.json";
@@ -158,32 +158,47 @@ export async function deleteMovie(id, uid) {
 export async function addMovie(id, uid) {
   var result = false;
   var movieIdList = [];
+  var numberInStock = 0;
 
   await get(ref(db, "users/" + uid + "/movies")).then((snap) => {
     if (snap.exists()) movieIdList = Object.values(snap.val());
   });
 
+  await get(ref(db, "movies/" + id + "/numberInStock")).then((snap) => {
+    if (snap.exists()) numberInStock = snap.val();
+  });
+
   if (movieIdList.includes(id))
     toast.error((await getMovieName(id)) + " already added to My Movies");
-  else
-    await push(ref(db, "users/" + uid + "/movies"), id)
+  else if (numberInStock <= 0)
+    toast.error((await getMovieName(id)) + " out of stock");
+  else {
+    movieIdList.push(id);
+    await set(ref(db, "users/" + uid + "/movies"), movieIdList)
       .then(async () => {
         result = true;
+        set(ref(db, "movies/" + id + "/numberInStock"), numberInStock - 1);
         toast.success((await getMovieName(id)) + " added to My Movies");
       })
       .catch(() => {
         result = false;
         toast.warn("Permission denied");
       });
+  }
   return result;
 }
 
 export async function removeMovie(id, uid) {
   var result = false;
   var movieIdObj = [];
+  var numberInStock = 0;
 
   await get(ref(db, "users/" + uid + "/movies")).then((snap) => {
     if (snap.exists()) movieIdObj = snap.val();
+  });
+
+  await get(ref(db, "movies/" + id + "/numberInStock")).then((snap) => {
+    if (snap.exists()) numberInStock = snap.val();
   });
 
   const movieIdList = Object.values(movieIdObj);
@@ -196,6 +211,7 @@ export async function removeMovie(id, uid) {
         "users/" + uid + "/movies/" + movieKeyList[movieIdList.indexOf(id)]
       )
     );
+    set(ref(db, "movies/" + id + "/numberInStock"), numberInStock + 1);
     toast.success((await getMovieName(id)) + " removed from My movies.");
     result = true;
   } else {

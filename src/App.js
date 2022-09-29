@@ -71,7 +71,7 @@ class App extends Component {
                 ) : loggedIn ? (
                   <Navigate to="/movies" />
                 ) : (
-                  <Navigate to="/login" />
+                  <Navigate to="/login?then=movies" />
                 )
               }
             />

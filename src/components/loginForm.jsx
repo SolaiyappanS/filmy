@@ -2,7 +2,7 @@ import React from "react";
 import Joi from "joi-browser";
 import Form from "./common/form";
 import { login } from "../services/userService";
-import { withRouterAndNavigate } from "../services/routerService";
+import withRouter from "../services/routerService";
 
 class LoginForm extends Form {
   state = {
@@ -38,4 +38,4 @@ class LoginForm extends Form {
   }
 }
 
-export default withRouterAndNavigate(LoginForm);
+export default withRouter(LoginForm);

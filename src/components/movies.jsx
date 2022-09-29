@@ -52,13 +52,19 @@ class Movies extends Component {
 
   handleAddMovie = async (movie) => {
     await addMovie(movie._id, getUid()).then((snap) => {
-      if (snap) this.updateUser();
+      if (snap) {
+        this.updateUser();
+        this.updateMovieDatabase();
+      }
     });
   };
 
   handleRemoveMovie = async (movie) => {
     await removeMovie(movie._id, getUid()).then((snap) => {
-      if (snap) this.updateUser();
+      if (snap) {
+        this.updateUser();
+        this.updateMovieDatabase();
+      }
     });
   };
 
