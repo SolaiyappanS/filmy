@@ -43,6 +43,12 @@ class App extends Component {
     await this.updateUserCredentials();
   }
 
+  getPath() {
+    if (window.location.search && window.location.search.split("?then=")[1])
+      return "/" + window.location.search.split("?then=")[1];
+    else return "/";
+  }
+
   render() {
     const { admin } = this.state.user;
     const { loggedIn } = this.state;
@@ -61,7 +67,9 @@ class App extends Component {
             />
             <Route
               path="/login"
-              element={loggedIn ? <Navigate to="/movies" /> : <LoginForm />}
+              element={
+                loggedIn ? <Navigate to={this.getPath()} /> : <LoginForm />
+              }
             />
             <Route
               path="/movies/:id"
